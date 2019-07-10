@@ -6,7 +6,7 @@ import json
 import requests
 
 topbuffer = 1
-minheight = 300000
+minheight = 0
 
 
 def lastknownblock():
