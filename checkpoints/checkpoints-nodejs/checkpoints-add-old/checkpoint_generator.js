@@ -3,7 +3,7 @@ const CSV = require("export-to-csv"),
 	  TurtleCoind = require('turtlecoin-rpc').TurtleCoind;
 
 const daemon = new TurtleCoind({
-	host: 'pool.bitcoinnova.org', // ip address or hostname of the Telluriumd host
+	host: 'pool.bitcoinnova.org', // ip address or hostname of the Bitcoin Nova host
 	port: 45223, // what port is the RPC server running on
 	timeout: 30000, // request timeout
 	ssl: false // whether we need to connect using SSL/TLS
@@ -31,7 +31,7 @@ class Checkpoint {
 	}
 }
 
-const checkpointEveryBlocks = 100;
+const checkpointEveryBlocks = 1000;
 var checkpoints = [];
 
 daemon.getBlockCount().then(async (height) => {
@@ -39,7 +39,7 @@ daemon.getBlockCount().then(async (height) => {
 
 	for (let i = checkpointEveryBlocks; i < height; i += checkpointEveryBlocks) {
 		await console.log("Getting block info for height " + i);
-		await checkpoints.push(new Checkpoint("{" + i + ", ",await daemon.getBlockHash ({height: i + 1})));
+		await checkpoints.push(new Checkpoint("{" + i + ", ",await daemon.getBlockHash({height: i + 1})));
 }
 
 	console.log("Checkpoints:\n" + JSON.stringify(checkpoints, null , 4));

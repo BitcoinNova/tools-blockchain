@@ -1,13 +1,11 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 
 import sys
 import json
 import requests
 
-topbuffer = 1
-minheight = 0
-
+topbuffer = 1 # Current delayed blocks (Delayed Blocks vs. Current Block)
+minheight = 0 # Here goes the lowest block number to add to the .csv file.
 
 def lastknownblock():
     try:
@@ -23,7 +21,7 @@ def height():
     base_url = 'http://pool.bitcoinnova.org:45223/getheight'
     resp = requests.get(base_url).json()
     if 'height' not in resp:
-        print ('Unexpected response, make sure BitcoinNovad is running',
+        print ('Unexpected response, make sure Zentd is running',
                resp)
         sys.exit(-1)
     else:
@@ -40,7 +38,7 @@ def rpc(method, params={}):
         }
     resp = requests.post(base_url, data=json.dumps(payload)).json()
     if 'result' not in resp:
-        print ('Unexpected response, make sure BitcoinNovad is running with block explorer enabled'
+        print ('Unexpected response, make sure Zentd is running with block explorer enabled'
                , resp)
         sys.exit(-1)
     else:
@@ -57,7 +55,7 @@ def get_block_info(from_height):
     return resp['blocks']
 
 
-stop_height = lastknownblock() + (minheight + 1)
+stop_height = lastknownblock() + (minheight)
 
 current_height = height() - topbuffer
 all_blocks = []
@@ -79,4 +77,3 @@ with open('checkpoints.csv', 'a') as f:
     f.write('\n'.join(all_blocks))
     if len(all_blocks) > 0:
         f.write('\n')
-
